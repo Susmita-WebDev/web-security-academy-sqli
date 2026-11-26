@@ -1,5 +1,5 @@
-[README.md](https://github.com/user-attachments/files/35459194/README.md)
-# SQL Injection — Web Security Academy Write-ups
+[README (1).md](https://github.com/user-attachments/files/35463735/README.1.md)
+# SQL Injection: Web Security Academy Write-ups
 
 Hands-on documentation of SQL injection vulnerabilities I worked through on the
 [PortSwigger Web Security Academy](https://portswigger.net/web-security), using **Burp Suite**.
@@ -10,10 +10,10 @@ for it as a QA engineer, and how a development team should fix it.
 > environments, which are built and licensed for security practice. No live or third-party
 > systems were tested.
 
-**Author:** Susmita Dey Sarkar — QA Engineer focused on web & API testing, building depth in
+**Author:** Susmita Dey Sarkar: QA Engineer focused on web & API testing, building depth in
 application security.
 **Tools:** Burp Suite (Proxy, Repeater, Intruder), browser dev tools.
-**Reference:** OWASP Top 10 — A03:2021 Injection.
+**Reference:** OWASP Top 10: A03:2021 Injection.
 
 ---
 
@@ -21,10 +21,10 @@ application security.
 
 1. [Retrieving hidden data (WHERE clause)](#1-retrieving-hidden-data)
 2. [Login bypass](#2-login-bypass)
-3. [UNION attack — determining the number of columns](#3-union-attack--number-of-columns)
-4. [UNION attack — finding a column containing text](#4-union-attack--column-containing-text)
-5. [UNION attack — retrieving data from other tables](#5-union-attack--data-from-other-tables)
-6. [UNION attack — multiple values in a single column](#6-union-attack--multiple-values-in-a-single-column)
+3. [UNION attack: determining the number of columns](#3-union-attack--number-of-columns)
+4. [UNION attack: finding a column containing text](#4-union-attack--column-containing-text)
+5. [UNION attack: retrieving data from other tables](#5-union-attack--data-from-other-tables)
+6. [UNION attack: multiple values in a single column](#6-union-attack--multiple-values-in-a-single-column)
 7. [Querying the database version (MySQL)](#7-querying-the-database-version)
 8. [Listing the database contents (non-Oracle)](#8-listing-the-database-contents)
 9. [Blind SQL injection with conditional responses](#9-blind-sql-injection-with-conditional-responses)
@@ -55,7 +55,7 @@ that should not be visible.
 **Remediation:** Use parameterised queries (prepared statements) so input is always treated as
 data, never executable SQL.
 
-![Solved — SQL injection hidden data lab](screenshots/01-hidden-data.png)
+![Solved: SQL injection hidden data lab](screenshots/01-hidden-data.png)
 
 ---
 
@@ -82,11 +82,11 @@ secure application treats these as literal text and the login fails; a vulnerabl
 **Remediation:** Parameterised queries, plus server-side authentication that never builds SQL from
 raw input. Enforce account lockout and MFA as defence in depth.
 
-![Solved — SQL injection login bypass lab](screenshots/02-login-bypass.png)
+![Solved: SQL injection login bypass lab](screenshots/02-login-bypass.png)
 
 ---
 
-## 3. UNION attack — number of columns
+## 3. UNION attack: number of columns
 
 **Vulnerability:** The category filter returns query results in the response, enabling a UNION-based
 attack. The first step is determining how many columns the original query returns.
@@ -105,11 +105,11 @@ attack. The first step is determining how many columns the original query return
 **Remediation:** Parameterised queries; the application should also return generic error responses
 that do not reveal query structure.
 
-![Solved — UNION attack determining number of columns](screenshots/03-columns.png)
+![Solved: UNION attack determining number of columns](screenshots/03-columns.png)
 
 ---
 
-## 4. UNION attack — column containing text
+## 4. UNION attack: column containing text
 
 **Vulnerability:** After the column count is known, each column must be tested to find which can
 hold string data (needed to display extracted text).
@@ -124,15 +124,15 @@ A 500 error indicates a type mismatch (numeric column); a 200 with the marker re
 usable text column.
 
 **How I would test for it:** Confirm both the column count and data types before assuming data can
-be read — a count match alone is not enough.
+be read: a count match alone is not enough.
 
 **Remediation:** Parameterised queries.
 
-![Solved — UNION attack finding a text column](screenshots/04-text-column.png)
+![Solved: UNION attack finding a text column](screenshots/04-text-column.png)
 
 ---
 
-## 5. UNION attack — data from other tables
+## 5. UNION attack: data from other tables
 
 **Vulnerability:** Because results are reflected and the column structure is known, data can be read
 from unrelated tables.
@@ -144,18 +144,18 @@ from unrelated tables.
 ```
 The administrator credentials are read from the response and used to log in.
 
-**Impact:** Critical. A single injectable filter exposes every user's credentials — a full
+**Impact:** Critical. A single injectable filter exposes every user's credentials: a full
 authentication-data breach.
 
 **Remediation:** Parameterised queries, least-privilege database accounts (the web app's DB user
 should not be able to read credential tables beyond what it needs), and hashed/salted passwords so
 that even leaked values are not directly usable.
 
-![Solved — UNION attack retrieving data from other tables](screenshots/05-other-tables.png)
+![Solved: UNION attack retrieving data from other tables](screenshots/05-other-tables.png)
 
 ---
 
-## 6. UNION attack — multiple values in a single column
+## 6. UNION attack: multiple values in a single column
 
 **Vulnerability:** The query exposes only one usable text column, which initially appears to limit
 how much data can be extracted at once.
@@ -166,12 +166,12 @@ how much data can be extracted at once.
 ```
 Each row returns `administrator~<password>`, and the password is read after the separator.
 
-**Lesson:** Restricting output to a single column does **not** protect the data — concatenation
+**Lesson:** Restricting output to a single column does **not** protect the data: concatenation
 defeats it.
 
 **Remediation:** Parameterised queries.
 
-![Solved — UNION attack multiple values in a single column](screenshots/06-single-column.png)
+![Solved: UNION attack multiple values in a single column](screenshots/06-single-column.png)
 
 ---
 
@@ -189,7 +189,7 @@ The response discloses the exact database version string.
 **Why attackers do this:** The database type and version determine which syntax, tables and known
 exploits (CVEs) apply next. This is the reconnaissance step before deeper attacks.
 
-**Reference — comment / version syntax by engine:**
+**Reference: comment / version syntax by engine:**
 
 | Database | Version function | Comment |
 | --- | --- | --- |
@@ -226,18 +226,18 @@ they must first be discovered through the `information_schema` catalog before da
 4. Log in as administrator with the recovered password.
 
 **Lesson:** `information_schema` is a standard catalog every SQL database exposes. Randomising
-names slows an attacker down but does not stop one — it is security through obscurity.
+names slows an attacker down but does not stop one: it is security through obscurity.
 
 **Remediation:** Parameterised queries and least-privilege DB accounts.
 
-![Solved — listing database contents on non-Oracle databases](screenshots/08-list-contents.png)
+![Solved: listing database contents on non-Oracle databases](screenshots/08-list-contents.png)
 
 ---
 
 ## 9. Blind SQL injection with conditional responses
 
 **Vulnerability:** A `TrackingId` cookie is used inside a SQL query. Results and errors are not
-returned, but the page shows a "Welcome back" message when the query returns any rows — a
+returned, but the page shows a "Welcome back" message when the query returns any rows: a
 boolean (true/false) oracle.
 
 **Exploitation:**
@@ -251,7 +251,7 @@ boolean (true/false) oracle.
    ```
    Increasing the number until the message disappears reveals the exact length.
 3. Extract the password one character at a time with `SUBSTRING`, automated using **Burp
-   Intruder** (Cluster bomb: position 1–20 × characters a–z, 0–9), grepping for "Welcome back":
+   Intruder** (Cluster bomb: position 1-20 × characters a-z, 0-9), grepping for "Welcome back":
    ```
    ' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='administrator')='a
    ```
@@ -263,10 +263,18 @@ unlike URL-parameter injection where the browser handles encoding.
 **Lesson:** Even with no visible output and no error messages, a single observable difference in the
 response is enough to extract an entire database, one bit at a time.
 
-**Remediation:** Parameterised queries. Treat *all* request inputs — including cookies and headers —
+**Remediation:** Parameterised queries. Treat *all* request inputs: including cookies and headers -
 as untrusted.
 
-<!-- ![Solved](screenshots/09-blind-conditional.png) -->
+![Solved - Blind SQL injection with conditional responses](screenshots/09-blind-conditional.png)
+
+*Burp Intruder setup - Cluster bomb with a "Welcome back" grep match:*
+
+![Burp Intruder setup for blind SQLi](screenshots/09-blind-intruder-setup.png)
+
+*Extracting the password one character at a time:*
+
+![Burp Intruder results extracting the password](screenshots/09-blind-intruder-results.png)
 
 ---
 
@@ -292,5 +300,5 @@ as untrusted.
 
 ---
 
-*Learning in progress — more OWASP Top 10 categories (access control, XSS, authentication, SSRF)
+*Learning in progress: more OWASP Top 10 categories (access control, XSS, authentication, SSRF)
 to follow.*
