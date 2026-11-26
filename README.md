@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/35448098/README.md)
+[README.md](https://github.com/user-attachments/files/35459194/README.md)
 # SQL Injection — Web Security Academy Write-ups
 
 Hands-on documentation of SQL injection vulnerabilities I worked through on the
@@ -55,7 +55,7 @@ that should not be visible.
 **Remediation:** Use parameterised queries (prepared statements) so input is always treated as
 data, never executable SQL.
 
-<!-- ![Solved](screenshots/01-hidden-data.png) -->
+![Solved — SQL injection hidden data lab](screenshots/01-hidden-data.png)
 
 ---
 
@@ -82,7 +82,7 @@ secure application treats these as literal text and the login fails; a vulnerabl
 **Remediation:** Parameterised queries, plus server-side authentication that never builds SQL from
 raw input. Enforce account lockout and MFA as defence in depth.
 
-<!-- ![Solved](screenshots/02-login-bypass.png) -->
+![Solved — SQL injection login bypass lab](screenshots/02-login-bypass.png)
 
 ---
 
@@ -105,7 +105,7 @@ attack. The first step is determining how many columns the original query return
 **Remediation:** Parameterised queries; the application should also return generic error responses
 that do not reveal query structure.
 
-<!-- ![Solved](screenshots/03-columns.png) -->
+![Solved — UNION attack determining number of columns](screenshots/03-columns.png)
 
 ---
 
@@ -128,7 +128,7 @@ be read — a count match alone is not enough.
 
 **Remediation:** Parameterised queries.
 
-<!-- ![Solved](screenshots/04-text-column.png) -->
+![Solved — UNION attack finding a text column](screenshots/04-text-column.png)
 
 ---
 
@@ -151,7 +151,7 @@ authentication-data breach.
 should not be able to read credential tables beyond what it needs), and hashed/salted passwords so
 that even leaked values are not directly usable.
 
-<!-- ![Solved](screenshots/05-other-tables.png) -->
+![Solved — UNION attack retrieving data from other tables](screenshots/05-other-tables.png)
 
 ---
 
@@ -171,7 +171,7 @@ defeats it.
 
 **Remediation:** Parameterised queries.
 
-<!-- ![Solved](screenshots/06-single-column.png) -->
+![Solved — UNION attack multiple values in a single column](screenshots/06-single-column.png)
 
 ---
 
@@ -230,7 +230,7 @@ names slows an attacker down but does not stop one — it is security through ob
 
 **Remediation:** Parameterised queries and least-privilege DB accounts.
 
-<!-- ![Solved](screenshots/08-list-contents.png) -->
+![Solved — listing database contents on non-Oracle databases](screenshots/08-list-contents.png)
 
 ---
 
